@@ -1,7 +1,6 @@
-
 from supermarket import Shop
 
-if __name__ == "__main__":
+def start_shop():
     my_shop = Shop()
     while(True):
         try:
@@ -13,3 +12,6 @@ if __name__ == "__main__":
             break
         except Exception as err:
             print("Error:", err)
+
+if __name__ == "__main__":
+    start_shop()
