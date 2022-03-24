@@ -1,5 +1,7 @@
 from typing import Dict
-from supermarket.models.product import Product
+from supermarket.offers import Offers
+from supermarket.product import ProductHandler
+from supermarket.sale import Sale
 
 
 class Shop:
@@ -7,11 +9,14 @@ class Shop:
 
     def __init__(self):
         # Product ID : Product Class
-        self.inventories: Dict[int, Product] = dict()
+        self.inventories: Dict[int, ProductHandler] = dict()
+        self.offers: Dict[int, Offers] = dict()
+
 
     def __add_product(self, query):
         id, name, quantity, price = query.split("|")
-        self.inventories[int(id)] = Product(int(id), name, int(quantity), int(price))
+        self.inventories[int(id)] = ProductHandler(
+            int(id), name, int(quantity), int(price))
         print("Inventory updated")
 
     def stock(self, query):
@@ -23,15 +28,26 @@ class Shop:
             raise Exception(f"No product found for {product_id} id.")
 
     def __sale(self, query):
-        pass
+        print("== Bill ==")
+        sales = query.split(';')
+        sale = Sale()
+        for product in sales:
+            product_id = int(product[0])
+            sold_quantity = int(product[2])
+            sale.sale_the_product(
+                product_id, sold_quantity, self.inventories, self.offers)
+        print("== Total ==")
+        print(sale.get_total_bill())
+        print("========")
+        sale.set_total_bill(0)
 
     def __add_offer(self, query):
         print("Offer Added")
 
     def execute(self, command):
-        command_name, query = command.split("=>")
+        instruction, query = command.split("=>")
 
-        match command_name:
+        match instruction:
             case "INVENTORY": self.__add_product(query)
 
             case "SALE": self.__sale(query)
