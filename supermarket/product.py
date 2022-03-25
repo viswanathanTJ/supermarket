@@ -33,5 +33,5 @@ class ProductHandler(Product):
     def get_price(self) -> int:
         return self._price
 
-    def set_price(self, _price: int):
-        self._price = _price
+    def set_price(self, price: int):
+        self._price = price
